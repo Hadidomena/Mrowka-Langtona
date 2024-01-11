@@ -70,7 +70,7 @@ Z ta inicjacja w forze moze byc problem z kompilacja. Ja bym zmienil to na to co
 */
 
     while(iterations-->0)
-	    move(mrowka, A);
+	    move(mrowka, A, width, height);
 
     return 0;
 }
