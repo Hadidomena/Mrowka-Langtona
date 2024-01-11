@@ -62,9 +62,15 @@ int main(int argc, char* argv[]) {
 
 
     ant * mrowka = create(direction, width, height);
-    for (int x = 0; x < iterations; x++) {
+/*   
+     for (int x = 0; x < iterations; x++) {
       move(mrowka, A);
     }
+Z ta inicjacja w forze moze byc problem z kompilacja. Ja bym zmienil to na to co nizej, ale sprawdz to jeszcze
+*/
+
+    while(iterations-->0)
+	    move(mrowka, A);
 
     return 0;
 }
