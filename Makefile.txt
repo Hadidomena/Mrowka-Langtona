@@ -1,0 +1,2 @@
+mrowka:
+	cc -o main mrowka.c main.c mat_io.c
