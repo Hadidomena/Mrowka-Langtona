@@ -8,5 +8,5 @@ typedef struct _ant {
 } ant;
 
 ant * create(int dir, int width, int height );
-int move(ant *ant);
+int move(ant *ant, Matrix * plansza);
 #endif
