@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 
     ant * mrowka = create(direction, width, height);
     for (int x = 0; x < iterations; x++) {
-      move(mrowka);
+      move(mrowka, A);
     }
 
     return 0;
