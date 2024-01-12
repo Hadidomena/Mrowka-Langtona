@@ -60,10 +60,10 @@ int main(int argc, char* argv[]) {
     if (A == NULL) {
       return -1;
     }
-    for (int x = 0; x < iterations; x++) {
+    int x = 0;]
+    while(iterations-->0) {
       move(mrowka, A);
-      print(A, prefix, x);
+      print(A, prefix, x++);
     }
-
     return 0;
 }

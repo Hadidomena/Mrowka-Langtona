@@ -1,14 +1,87 @@
 #include "mrowka.h"
 
+#define CZARNY 1	//jaka dana reprezentuje czarny kolor planszy
+#define BIALY 0		//jaka dana reprezentuje bialy kolor planszy
+
 ant * create(int dir, int width, int height ) {
-    // trzeba przypisac wartosci dla 3 parametrow struktury ant
-    // imo mozna ja zawsze ustawiac na srodku planszy, wiec uzyc jej wymiarow do przypisania pozycji x i y mrowki
+/*funkcja porzadkujaca poczatkowe parametry: kierunek, szerokosc planszy, wysokosc planszy w strukture typu ant*/
+
+	ant * akt_parametry = (ant *) malloc(sizeof(ant));
+	akt_parametry->direction = dir;
+	akt_parametry->position_x = width/2 +1;	/*do rozwazenia czy w przypadku parzystego wymiaru chcemy, aby mrowka
+						  pojawiala sie po prawej czy lewej stronie od srodka*/
+	akt_parametry->position_y = height/2 +1;/*to co wyzej*/
+
+	return akt_parametry;
+
 }
-int move(ant *ant, Matrix * plansza) {
-    // przesuwa mrowke zgodnie z jej kierunkiem, oraz sprawdza czy nie "przechodzi" ona przez sciane
-    // trzeba zmienic jej kierunek potem, moja propozycja to np wzor (direction + 4) % 4 zeby nie zaleznie czy skreca
-    // w lewo czy prawo zawsze byla liczba z zakresu <0, 3>
-    // i niech przy przechodzeniu przez sciane zwroci 1, jesli nie ma problemow 0
-    // nie widze wiecej potencjalu na bledy, ale jakby cos bylo to tez mozesz dodac
+int move(ant *akt_parametry, Matrix * plansza, int szerokosc, int wysokosc) {
+    /* Przesuwa mrowke zgodnie z jej kierunkiem, sprawdza czy nie "przechodzi" przez sciane,
+       zmienia kolor pola, obraca mrowke
+       Jesli mrowka przechodzi przez sciane zwroca 1, jesli nie 0 */
+
+	if ( plansza->data[akt_parametry->position_y][akt_parametry->position_x] == CZARNY)
+	{
+		if(akt_parametry->direction > 0) //zmiana kierunku
+			--(akt_parametry->direction) %= 4;
+		else
+		{
+			(akt_parametry->direction) += 4;
+			--(akt_parametry->direction) %= 4;
+		}
+
+		plansza->data[akt_parametry->position_y][akt_parametry->position_x] = BIALY; //zmiana koloru pola
+
+		if (akt_parametry->direction == 0) //ruch mrowki
+			(akt_parametry->position_y)--;
+
+		else if (akt_parametry->direction == 1)
+			(akt_parametry->position_x)++;
+
+		else if (akt_parametry->direction == 2)
+			(akt_parametry->position_y)++;
+
+		else if (akt_parametry->direction == 3)
+			(akt_parametry->position_x)--;
+
+		if (akt_parametry->position_x < 0 ||			//sprawdzenie czy mrowka nie wyszla poza plansze
+		    akt_parametry->position_x >= szerokosc ||
+		    akt_parametry->position_y < 0 ||
+		    akt_parametry->position_y >= wysokosc)
+			return 1;
+	}
+	else if ( plansza->data[akt_parametry->position_y][akt_parametry->position_x] == BIALY)
+	{
+		if(akt_parametry->direction > 0) //zmiana kierunku
+			++(akt_parametry->direction) %= 4;
+		else
+		{
+			(akt_parametry->direction) += 4;
+			++(akt_parametry->direction) %= 4;
+		}
+
+		plansza->data[akt_parametry->position_y][akt_parametry->position_x] = CZARNY; //zmiana koloru pola
+
+		if (akt_parametry->direction == 0) //ruch mrowki
+			(akt_parametry->position_y)--;
+
+		else if (akt_parametry->direction == 1)
+			(akt_parametry->position_x)++;
+
+		else if (akt_parametry->direction == 2)
+			(akt_parametry->position_y)++;
+
+		else if (akt_parametry->direction == 3)
+			(akt_parametry->position_x)--;
+
+		if (akt_parametry->position_x < 0 ||			//sprawdzenie czy mrowka nie wyszla poza plansze
+		    akt_parametry->position_x >= szerokosc ||
+		    akt_parametry->position_y < 0 ||
+		    akt_parametry->position_y >= wysokosc)
+			return 1;
+	}
+
+	return 0;
+	
 }
 
