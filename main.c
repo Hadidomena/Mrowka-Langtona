@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     if (A == NULL) {
       return -1;
     }
-    int x = 0;]
+    int x = 0;
     while(iterations-->0) {
       move(mrowka, A);
       print(A, prefix, x++);
