@@ -5,21 +5,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "mat_io.h"
 #include "mrowka.h"
-
 int main(int argc, char* argv[]) {
     int c;
     int width = -1;
     int height = -1;
     int iterations = -1;
-    char * prefix;
+    char * prefix = "";
     int direction = -1;
     char * existing = "abcdefghijklmnoprstuwxyz";
-    int covered = -1;
-    Matrix *A = NULL;
-    while ( (c = getopt (argc, argv, "w:h:i:p:d:e:c:")) != -1 ) {
+    int covered = 0;
 
+    while ( (c = getopt (argc, argv, "w:h:i:p:d:e:c:")) != -1 ) {
       switch( c )
       {
         case 'w':
@@ -46,12 +45,6 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    if (strcmp(existing, "abcdefghijklmnoprstuwxyz") != 0)
-    {
-      printf("mamy to %s\n", existing);
-      Matrix *A = readFromFile(existing);
-    }
-
     if ( width <= 0 || height <= 0 || iterations <= 0 ||
     direction < 0 || direction > 3 ||
     covered < 0 || covered > 100 )
@@ -60,10 +53,16 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-
     ant * mrowka = create(direction, width, height);
+    Matrix *A = strcmp(existing, "abcdefghijklmnoprstuwxyz") != 0 ? readFromFile(existing): fresh_Matrix(covered, width, height,
+    mrowka->position_x, mrowka->position_y, mrowka->direction);
+
+    if (A == NULL) {
+      return -1;
+    }
     for (int x = 0; x < iterations; x++) {
       move(mrowka, A);
+      print(A, prefix, x);
     }
 
     return 0;
