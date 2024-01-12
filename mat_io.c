@@ -64,7 +64,7 @@ void print(Matrix *mat, char* prefix, int x)
             for (j = 0; j < mat->c; j++)
             {
                 if (i == mat->y && j == mat->x) {
-                    fprintf(out ,"%i ", mat->data[i][j] + 3);
+                    fprintf(out ,"%i ", mat->data[i][j]);
                 } else {
                     fprintf(out ,"%i ", mat->data[i][j]);
                 }
