@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
     int check;
     while(iterations-->0) {
       check = move(mrowka, A, width, height);
-      if (check = 1) {
+      if (check == 1) {
         return 2;
       }
       print(A, prefix, x++);
