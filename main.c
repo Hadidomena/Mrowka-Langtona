@@ -60,13 +60,16 @@ int main(int argc, char* argv[]) {
     if (A == NULL) {
       return -1;
     }
+  
     int x = 0;
     int check;
+  
     while(iterations-->0) {
       check = move(mrowka, A, width, height);
       if (check == 1) {
         return 2;
       }
+      
       print(A, prefix, x++);
       A->x = mrowka->position_x;
       A->y = mrowka->position_y;
