@@ -1,8 +1,28 @@
 #include "mat_io.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <wchar.h>
+#include <locale.h>
+	
+#define LINE_VERTICAL │
+#define LINE_HORIZONTAL ─
+#define LINE_DOWN_RIGHT ┌
+#define LINE_DOWN_LEFT ┐
+#define LINE_UP_RIGHT └
+#define LINE_UP_LEFT ┘
+#define SQUARE_WHITE  
+#define SQUARE_BLACK █
+#define ARROW_NORTH_WHITE L△
+#define ARROW_NORTH_BLACK ▲
+#define ARROW_EAST_WHITE ▷
+#define ARROW_EAST_BLACK ▶
+#define ARROW_SOUTH_WHITE ▽
+#define ARROW_SOUTH_BLACK ▼
+#define ARROW_WEST_WHITE ◁
+#define ARROW_WEST_BLACK ◀
 
 Matrix *readFromFile(char *fname)
 {
@@ -46,17 +66,44 @@ void print(Matrix *mat, char* prefix, int x)
             for (j = 0; j < mat->c; j++)
             {
                 if (i == mat->y && j == mat->x) {
-                    printf("%i ", mat->data[i][j] + 3);
+                    switch (100 + mat->dir * 10 + mat->data[i][j]) {
+			case 100:
+			    	printf("△");
+			  	break;  
+			case 110: 
+			  	printf("▷");
+				break;
+			case 120:
+				printf("▽");
+				break;
+			case 130:
+				printf("◁");
+				break;
+			case 101:
+				printf("▲");
+				break;
+			case 111:
+				printf("▶");
+				break;
+			case 121:
+				printf("▼");
+				break;
+			case 131:
+				printf("◀");
+			}
+                } else if (mat->data[i][j] == 0) {
+                    printf(" ");
                 } else {
-                    printf("%i ", mat->data[i][j]);
-                }
+			printf("█");
+		}
             }
             printf("\n");
         }
-    } else {
+    } else { 
         char file[1000];
         snprintf(file, 1000, "%s_%d", prefix, x);
         FILE *out = fopen( file, "w" );
+
         fprintf(out, "%i %i %i %i %i\n", mat->r, mat->c, mat->x, mat->y, mat->dir);
         int i, j;
         for (i = 0; i < mat->r; i++)
@@ -64,13 +111,39 @@ void print(Matrix *mat, char* prefix, int x)
             for (j = 0; j < mat->c; j++)
             {
                 if (i == mat->y && j == mat->x) {
-                    fprintf(out ,"%i ", mat->data[i][j]);
+                    switch (100 + mat->dir * 10 + mat->data[i][j]) {
+			case 100:
+			    	fprintf(out, "△");
+			  	break;  
+			case 110: 
+			  	fprintf(out, "▷");
+				break;
+			case 120:
+				fprintf(out, "▽");
+				break;
+			case 130:
+				fprintf(out, "◁");
+				break;
+			case 101:
+				fprintf(out, "▲");
+				break;
+			case 111:
+				fprintf(out, "▶");
+				break;
+			case 121:
+				fprintf(out, "▼");
+				break;
+			case 131:
+				fprintf(out, "◀");
+			}
+                } else if (mat->data[i][j] == 0) {
+                   	 fprintf(out, " ");
                 } else {
-                    fprintf(out ,"%i ", mat->data[i][j]);
-                }
+			fprintf(out, "█");
+		}
             }
-            fprintf(out, "\n");
-        }
+	    fprintf(out, "\n");
+    	}
     }
 }
 
