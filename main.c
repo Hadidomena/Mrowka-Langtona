@@ -10,7 +10,7 @@
 #include "mrowka.h"
 int main(int argc, char* argv[]) {
     int c;
-    int polozenie[2] = {NULL, NULL}; //polozenie[] = {x, y}
+    int polozenie[2] = {-1, -1}; //polozenie[] = {x, y}
     int width = -1;
     int height = -1;
     int iterations = -1;
@@ -45,24 +45,30 @@ int main(int argc, char* argv[]) {
           break;
         case 'x':
           polozenie[0] = atoi(optarg);
-          /*polozenie[0] = (polozenia[0] > width ? NULL : polozenie[0]); // mechanizm do ponownego sprawdzenia jeszcze
-          if (polozenie[0] == NULL)
-             printf("Wprowadziles niepoprawne polozenie x. Ustawiam standardowe polozenie. /n");
-        */
+          if (polozenie[0] >= width || polozenie[0] < 0) // mechanizm do ponownego sprawdzenia jeszcze
+          {
+            polozenie[0] = width / 2 + 1;
+            printf("Wprowadziles niepoprawne polozenie x. Ustawiam standardowe polozenie. \n");
+          }
           break;
         case 'y':
           polozenie[1] = atoi(optarg);
-            /*polozenie[1] = (polozenia[0] > height ? NULL : polozenie[1]); // mechanizm do ponownego sprawdzenia jeszcze
-          if (polozenie[1] == NULL)
-             printf("Wprowadziles niepoprawne polozenie y. Ustawiam standardowe polozenie. /n");
-        */
+          if (polozenie[1] >= height || polozenie[1] < 0) // mechanizm do ponownego sprawdzenia jeszcze
+          {
+            polozenie[1] = height / 2 + 1;
+            printf("Wprowadziles niepoprawne polozenie y. Ustawiam standardowe polozenie. \n");
+          }
           break;
       }
     }
-    
-    polozenie[0] = (polozenie[0] == NULL ? (width/2 + 1) : polozenie[0]); //przypisanie polozenia w przypadku braku podania
-    polozenie[1] = (polozenie[1] == NULL ? (height/2 + 1) : polozenie[1]); // standardowo srodek
-    
+
+    if (polozenie[1] >= height || polozenie[1] < 0 ||
+    polozenie[0] >= width || polozenie[0] < 0) // tak zmienilem ustawianie jak nie ma x i y, bo pdw czemu ale nie dziala mi NULL
+    {
+      polozenie[1] = height / 2 + 1;
+      polozenie[0] = width / 2 + 1;
+    }
+
     if ( width <= 0 || height <= 0 || iterations <= 0 ||
     direction < 0 || direction > 3 ||
     covered < 0 || covered > 100 )
@@ -78,20 +84,24 @@ int main(int argc, char* argv[]) {
     if (A == NULL) {
       return -1;
     }
-  
+
     int x = 0;
     int check;
-  
+
     while(iterations-->0) {
+
+      print(A, prefix, x++);
+
       check = move(mrowka, A, width, height);
+
       if (check == 1) {
         return 2;
       }
-      
-      print(A, prefix, x++);
+
       A->x = mrowka->position_x;
       A->y = mrowka->position_y;
       A->dir = mrowka->direction;
+
     }
     return 0;
 }
