@@ -3,15 +3,14 @@
 #define CZARNY 1 // jaka dana reprezentuje czarny kolor planszy
 #define BIALY 0  // jaka dana reprezentuje bialy kolor planszy
 
-ant *create(int dir, int width, int height)
+ant *create(int dir, int * polozenie)
 {
     /*funkcja porzadkujaca poczatkowe parametry: kierunek, szerokosc planszy, wysokosc planszy w strukture typu ant*/
 
     ant *akt_parametry = (ant *) malloc(sizeof(ant));
     akt_parametry->direction = dir;
-    akt_parametry->position_x = width / 2 + 1;  /*do rozwazenia czy w przypadku parzystego wymiaru chcemy, aby mrowka
-                              pojawiala sie po prawej czy lewej stronie od srodka*/
-    akt_parametry->position_y = height / 2 + 1; /*to co wyzej*/
+    akt_parametry->position_x = polozenie[0];  
+    akt_parametry->position_y = polozenie[1]; 
 
     return akt_parametry;
 }
