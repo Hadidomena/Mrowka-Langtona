@@ -14,9 +14,9 @@ int main(int argc, char* argv[]) {
     int width = -1;
     int height = -1;
     int iterations = -1;
-    char * prefix = "";
+    const char * prefix = "";
     int direction = -1;
-    char * existing = "abcdefghijklmnoprstuwxyz";
+    const char * existing = "abcdefghijklmnoprstuwxyz";
     int covered = 0;
 
     while ( (c = getopt (argc, argv, "w:h:i:p:d:e:c:x:y:")) != -1 ) {
