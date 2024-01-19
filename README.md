@@ -8,7 +8,7 @@ b) wysokość pola w którym porusza się mrówka (-h) np. -h 10
 
 c) liczbę iteracji (-i) np. -i 5
 
-d) przedrostek plików wynikowych (-p) np. -p m
+d) przedrostek plików wynikowych (-p) np. -p Mrowa
 
 e) kierunek początkowy mrówki (-d + liczba z przedziału od 0 do 3; patrz poniżej) np. -d 3
 
