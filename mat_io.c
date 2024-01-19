@@ -6,43 +6,81 @@
 #include <string.h>
 #include <wchar.h>
 #include <locale.h>
-	
-#define LINE_VERTICAL │
-#define LINE_HORIZONTAL ─
-#define LINE_DOWN_RIGHT ┌
-#define LINE_DOWN_LEFT ┐
-#define LINE_UP_RIGHT └
-#define LINE_UP_LEFT ┘
-#define SQUARE_WHITE  
-#define SQUARE_BLACK █
-#define ARROW_NORTH_WHITE L△
-#define ARROW_NORTH_BLACK ▲
-#define ARROW_EAST_WHITE ▷
-#define ARROW_EAST_BLACK ▶
-#define ARROW_SOUTH_WHITE ▽
-#define ARROW_SOUTH_BLACK ▼
-#define ARROW_WEST_WHITE ◁
-#define ARROW_WEST_BLACK ◀
+
+#define LINE_VERTICAL L'│'
+#define LINE_HORIZONTAL L'─'
+#define LINE_DOWN_RIGHT L'┌'
+#define LINE_DOWN_LEFT L'┐'
+#define LINE_UP_RIGHT L'└'
+#define LINE_UP_LEFT L'┘'
+#define SQUARE_WHITE L' '
+#define SQUARE_BLACK L'█'
+#define ARROW_NORTH_WHITE L'△'
+#define ARROW_NORTH_BLACK L'▲'
+#define ARROW_EAST_WHITE L'▷'
+#define ARROW_EAST_BLACK L'▶'
+#define ARROW_SOUTH_WHITE L'▽'
+#define ARROW_SOUTH_BLACK L'▼'
+#define ARROW_WEST_WHITE L'◁'
+#define ARROW_WEST_BLACK L'◀'
 
 Matrix *readFromFile(char *fname)
 {
-    int r, c, x, y, dir;
+    int r, c, y, dir, x;
     int ir, ic;
+    int i;
     FILE *fin = fopen(fname, "r");
     Matrix *mat = NULL;
     if (fin != NULL)
     {
-        fscanf(fin, "%d %d %d %d %d", &r, &c, &x, &y, &dir);
+  	setlocale(LC_ALL, "C.UTF-8");
+        fwscanf(fin, L"%d %d %d %d %d", &r, &c, &x, &y, &dir);
         mat = createMatrix(r, c, x, y, dir);
+        wchar_t line[1000];
         if (mat != NULL)
         {
-            for (ir = 0; ir < r; ir++)
+            int z = 0;
+            ir = 0; ic = 0;
+            while (fgetws(line, 1000, fin) != NULL)
+            {
+                for (i=0; line[i] != L'\n'; i++)
+	       	{
+                    if ( (line[i] == ARROW_WEST_BLACK ||
+			  line[i] == ARROW_NORTH_BLACK ||
+			  line[i] == ARROW_EAST_BLACK ||
+			  line[i] == ARROW_SOUTH_BLACK ||
+			  line[i] == SQUARE_BLACK) && ir < r && ic < c)
+                    {
+                        mat->data[ir][ic++] = 1;
+                    }
+
+                    else if (( line[i] == ARROW_WEST_WHITE ||
+			      line[i] == ARROW_NORTH_WHITE ||
+			      line[i] == ARROW_EAST_WHITE ||
+			      line[i] == ARROW_SOUTH_WHITE ||
+			      line[i] == SQUARE_WHITE ) && ir < r && ic < c)
+                    {
+                        mat->data[ir][ic++] = 0;
+                    }
+
+                    if ( ic == c )
+		    {
+                        ir++;
+                        ic = 0;
+                    }
+                }
+            }
+            /*for (ir = 0; ir < r; ir++)
+            {
                 for (ic = 0; ic < c; ic++)
+                {
                     fscanf(fin, "%d", &(mat->data[ir][ic]));
+                }
+            } */
         }
         else
         {
-            fprintf(stderr, "Wystąpił problem podczas tworzenia macierzy o rozmiarach %d x %d dla danych z pliku: %s\n", r, c,
+            fwprintf(stderr, L"Wystąpił problem podczas tworzenia macierzy o rozmiarach %d x %d dla danych z pliku: %s\n", r, c,
                     fname);
         }
 
@@ -50,100 +88,139 @@ Matrix *readFromFile(char *fname)
     }
     else
     {
-        fprintf(stderr, "Nie mogę otworzyć pliku o nazwie: %s\n", fname);
+        fwprintf(stderr, L"Nie mogę otworzyć pliku o nazwie: %s\n", fname);
     }
 
     return mat;
 }
 
-void print(Matrix *mat, char* prefix, int x)
+void print(Matrix *mat, char* prefix, long long x)
 {
-    if (strcmp(prefix, "") == 0) {
-        printf("%i %i %i %i %i\n", mat->r, mat->c, mat->x, mat->y, mat->dir);
+  	setlocale(LC_ALL, "C.UTF-8");
+       	if (strcmp(prefix, "") == 0) {
+        wprintf(L"%i %i %i %i %i\n", mat->r, mat->c, mat->x, mat->y, mat->dir);
         int i, j;
+        wprintf(L"%lc", LINE_DOWN_RIGHT);
+        for (x = 0; x < mat->c; x++) {
+            wprintf(L"%lc", LINE_HORIZONTAL);
+        }
+        wprintf(L"%lc\n", LINE_DOWN_LEFT);
         for (i = 0; i < mat->r; i++)
         {
+            wprintf(L"%lc", LINE_VERTICAL);
             for (j = 0; j < mat->c; j++)
             {
                 if (i == mat->y && j == mat->x) {
                     switch (100 + mat->dir * 10 + mat->data[i][j]) {
 			case 100:
-			    	printf("△");
-			  	break;  
-			case 110: 
-			  	printf("▷");
+			    wprintf(L"%lc", ARROW_NORTH_WHITE);
+			  	break;
+
+			case 110:
+			  	wprintf(L"%lc", ARROW_EAST_WHITE);
 				break;
+
 			case 120:
-				printf("▽");
+				wprintf(L"%lc", ARROW_SOUTH_WHITE);
 				break;
+
 			case 130:
-				printf("◁");
+				wprintf(L"%lc", ARROW_WEST_WHITE);
 				break;
+
 			case 101:
-				printf("▲");
+				wprintf(L"%lc", ARROW_NORTH_BLACK);
 				break;
+
 			case 111:
-				printf("▶");
+				wprintf(L"%lc", ARROW_EAST_BLACK);
 				break;
+
 			case 121:
-				printf("▼");
+				wprintf(L"%lc", ARROW_SOUTH_BLACK);
 				break;
+
 			case 131:
-				printf("◀");
+				wprintf(L"%lc", ARROW_WEST_BLACK);
+                break;
+
 			}
                 } else if (mat->data[i][j] == 0) {
-                    printf(" ");
+                    wprintf(L"%lc", SQUARE_WHITE);
                 } else {
-			printf("█");
+			wprintf(L"%lc", SQUARE_BLACK);
 		}
             }
-            printf("\n");
+            wprintf(L"%lc", LINE_VERTICAL);
+            wprintf(L"\n");
         }
-    } else { 
+
+        wprintf(L"%lc", LINE_UP_RIGHT);
+        for (x = 0; x < mat->c; x++) {
+            wprintf(L"%lc", LINE_HORIZONTAL);
+        }
+        wprintf(L"%lc\n", LINE_UP_LEFT);
+    } else {
         char file[1000];
-        snprintf(file, 1000, "%s_%d", prefix, x);
+        snprintf(file, 1000, "%s_%lld", prefix, x + 1);
         FILE *out = fopen( file, "w" );
 
-        fprintf(out, "%i %i %i %i %i\n", mat->r, mat->c, mat->x, mat->y, mat->dir);
+        fwprintf(out, L"%i %i %i %i %i\n", mat->r, mat->c, mat->x, mat->y, mat->dir);
+        fwprintf(out, L"%lc", LINE_DOWN_RIGHT);
+        for (x = 0; x < mat->c; x++) {
+            fwprintf(out, L"%lc", LINE_HORIZONTAL);
+        }
+        fwprintf(out, L"%lc\n", LINE_DOWN_LEFT);
         int i, j;
         for (i = 0; i < mat->r; i++)
         {
+            fwprintf(out, L"%lc", LINE_VERTICAL);
             for (j = 0; j < mat->c; j++)
             {
                 if (i == mat->y && j == mat->x) {
                     switch (100 + mat->dir * 10 + mat->data[i][j]) {
-			case 100:
-			    	fprintf(out, "△");
-			  	break;  
-			case 110: 
-			  	fprintf(out, "▷");
-				break;
-			case 120:
-				fprintf(out, "▽");
-				break;
-			case 130:
-				fprintf(out, "◁");
-				break;
-			case 101:
-				fprintf(out, "▲");
-				break;
-			case 111:
-				fprintf(out, "▶");
-				break;
-			case 121:
-				fprintf(out, "▼");
-				break;
-			case 131:
-				fprintf(out, "◀");
+			            case 100:
+			                fwprintf(out, L"%lc", ARROW_NORTH_WHITE);
+			  	            break;
+			            case 110:
+			  	            fwprintf(out, L"%lc", ARROW_EAST_WHITE);
+				            break;
+			            case 120:
+				            fwprintf(out, L"%lc", ARROW_SOUTH_WHITE);
+				            break;
+			            case 130:
+				            fwprintf(out, L"%lc", ARROW_EAST_WHITE);
+				            break;
+			            case 101:
+				            fwprintf(out, L"%lc", ARROW_NORTH_BLACK);
+				            break;
+			            case 111:
+				            fwprintf(out, L"%lc", ARROW_EAST_BLACK);
+				            break;
+			            case 121:
+				            fwprintf(out, L"%lc", ARROW_SOUTH_BLACK);
+				            break;
+			            case 131:
+				            fwprintf(out, L"%lc", ARROW_WEST_BLACK);
+                            break;
 			}
-                } else if (mat->data[i][j] == 0) {
-                   	 fprintf(out, " ");
-                } else {
-			fprintf(out, "█");
+        } else if (mat->data[i][j] == 0) {
+            fwprintf(out, L"%lc", SQUARE_WHITE);
+        } else {
+			fwprintf(out, L"%lc", SQUARE_BLACK);
 		}
-            }
-	    fprintf(out, "\n");
+        }
+        fwprintf(out, L"%lc", LINE_VERTICAL);
+	    fwprintf(out, L"\n");
     	}
+
+        fwprintf(out, L"%lc", LINE_UP_RIGHT);
+        for (x = 0; x < mat->c; x++) {
+            fwprintf(out, L"%lc", LINE_HORIZONTAL);
+        }
+        fwprintf(out, L"%lc\n", LINE_UP_LEFT);
+
+        fclose(out);
     }
 }
 
