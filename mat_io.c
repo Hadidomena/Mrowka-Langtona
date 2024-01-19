@@ -28,21 +28,59 @@ Matrix *readFromFile(char *fname)
 {
     int r, c, x, y, dir;
     int ir, ic;
+    int i;
     FILE *fin = fopen(fname, "r");
     Matrix *mat = NULL;
     if (fin != NULL)
     {
-        fscanf(fin, "%d %d %d %d %d", &r, &c, &x, &y, &dir);
+  	setlocale(LC_ALL, "C.UTF-8");
+        fwscanf(fin, L"%d %d %d %d %d", &r, &c, &x, &y, &dir);
         mat = createMatrix(r, c, x, y, dir);
+        wchar_t line[1000];
         if (mat != NULL)
         {
-            for (ir = 0; ir < r; ir++)
+            int z = 0;
+            ir = 0; ic = 0;
+            while (fgetws(line, 1000, fin) != NULL)
+            {
+                for (i=0; line[i] != L'\n'; i++)
+	       	{
+                    if ( (line[i] == ARROW_WEST_BLACK ||
+			  line[i] == ARROW_NORTH_BLACK ||
+			  line[i] == ARROW_EAST_BLACK ||
+			  line[i] == ARROW_SOUTH_BLACK ||
+			  line[i] == SQUARE_BLACK) && ir < r && ic < c)
+                    {
+                        mat->data[ir][ic++] = 1;
+                    }
+
+                    else if (( line[i] == ARROW_WEST_WHITE ||
+			      line[i] == ARROW_NORTH_WHITE ||
+			      line[i] == ARROW_EAST_WHITE ||
+			      line[i] == ARROW_SOUTH_WHITE ||
+			      line[i] == SQUARE_WHITE ) && ir < r && ic < c)
+                    {
+                        mat->data[ir][ic++] = 0;
+                    }
+
+                    if ( ic == c )
+		    {
+                        ir++;
+                        ic = 0;
+                    }
+                }
+            }
+            /*for (ir = 0; ir < r; ir++)
+            {
                 for (ic = 0; ic < c; ic++)
+                {
                     fscanf(fin, "%d", &(mat->data[ir][ic]));
+                }
+            } */
         }
         else
         {
-            fprintf(stderr, "Wystąpił problem podczas tworzenia macierzy o rozmiarach %d x %d dla danych z pliku: %s\n", r, c,
+            fwprintf(stderr, L"Wystąpił problem podczas tworzenia macierzy o rozmiarach %d x %d dla danych z pliku: %s\n", r, c,
                     fname);
         }
 
@@ -50,7 +88,7 @@ Matrix *readFromFile(char *fname)
     }
     else
     {
-        fprintf(stderr, "Nie mogę otworzyć pliku o nazwie: %s\n", fname);
+        fwprintf(stderr, L"Nie mogę otworzyć pliku o nazwie: %s\n", fname);
     }
 
     return mat;
