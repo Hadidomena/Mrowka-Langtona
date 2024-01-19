@@ -26,7 +26,7 @@
 
 Matrix *readFromFile(char *fname)
 {
-    int r, c, x, y, dir;
+    int r, c, y, dir, x;
     int ir, ic;
     int i;
     FILE *fin = fopen(fname, "r");
@@ -94,14 +94,14 @@ Matrix *readFromFile(char *fname)
     return mat;
 }
 
-void print(Matrix *mat, char* prefix, int x)
+void print(Matrix *mat, char* prefix, long long x)
 {
   	setlocale(LC_ALL, "C.UTF-8");
        	if (strcmp(prefix, "") == 0) {
         wprintf(L"%i %i %i %i %i\n", mat->r, mat->c, mat->x, mat->y, mat->dir);
         int i, j;
         wprintf(L"%lc", LINE_DOWN_RIGHT);
-        for (int x = 0; x < mat->c; x++) {
+        for (x = 0; x < mat->c; x++) {
             wprintf(L"%lc", LINE_HORIZONTAL);
         }
         wprintf(L"%lc\n", LINE_DOWN_LEFT);
@@ -156,18 +156,18 @@ void print(Matrix *mat, char* prefix, int x)
         }
 
         wprintf(L"%lc", LINE_UP_RIGHT);
-        for (int x = 0; x < mat->c; x++) {
+        for (x = 0; x < mat->c; x++) {
             wprintf(L"%lc", LINE_HORIZONTAL);
         }
         wprintf(L"%lc\n", LINE_UP_LEFT);
     } else {
         char file[1000];
-        snprintf(file, 1000, "%s_%d", prefix, x + 1);
+        snprintf(file, 1000, "%s_%lld", prefix, x + 1);
         FILE *out = fopen( file, "w" );
 
         fwprintf(out, L"%i %i %i %i %i\n", mat->r, mat->c, mat->x, mat->y, mat->dir);
         fwprintf(out, L"%lc", LINE_DOWN_RIGHT);
-        for (int x = 0; x < mat->c; x++) {
+        for (x = 0; x < mat->c; x++) {
             fwprintf(out, L"%lc", LINE_HORIZONTAL);
         }
         fwprintf(out, L"%lc\n", LINE_DOWN_LEFT);
@@ -215,10 +215,12 @@ void print(Matrix *mat, char* prefix, int x)
     	}
 
         fwprintf(out, L"%lc", LINE_UP_RIGHT);
-        for (int x = 0; x < mat->c; x++) {
+        for (x = 0; x < mat->c; x++) {
             fwprintf(out, L"%lc", LINE_HORIZONTAL);
         }
         fwprintf(out, L"%lc\n", LINE_UP_LEFT);
+
+        fclose(out);
     }
 }
 
