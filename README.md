@@ -16,9 +16,9 @@ f) ścieżkę do pliku zawierającego mapę z naniesionymi już "czarnymi" polam
 
 g) procent czarnych pól (-c) np. -c 50
 
-e) polozenie w poziomie (-x) np. -x 5
+h) polozenie w poziomie (-x) np. -x 5
 
-e) polozenie w pionie (-y) np. -y 5
+i) polozenie w pionie (-y) np. -y 5
 
 SPOSÓB OKREŚLANIA KIERUNKU MRÓWKI:
 
