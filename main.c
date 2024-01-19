@@ -14,9 +14,9 @@ int main(int argc, char* argv[]) {
     int width = -1;
     int height = -1;
     int iterations = -1;
-    const char * prefix = "";
+    char * prefix = "";
     int direction = -1;
-    const char * existing = "abcdefghijklmnoprstuwxyz";
+    char * existing = "abcdefghijklmnoprstuwxyz";
     int covered = 0;
 
     while ( (c = getopt (argc, argv, "w:h:i:p:d:e:c:x:y:")) != -1 ) {
@@ -65,8 +65,8 @@ int main(int argc, char* argv[]) {
     if (polozenie[1] >= height || polozenie[1] < 0 ||
     polozenie[0] >= width || polozenie[0] < 0) // tak zmienilem ustawianie jak nie ma x i y, bo pdw czemu ale nie dziala mi NULL
     {
-      polozenie[1] = height / 2 + 1;
-      polozenie[0] = width / 2 + 1;
+      polozenie[1] = height / 2;
+      polozenie[0] = width / 2 - 1;
     }
 
     if ( width <= 0 || height <= 0 || iterations <= 0 ||
@@ -80,7 +80,11 @@ int main(int argc, char* argv[]) {
     ant * mrowka = create(direction, polozenie);
     Matrix *A = strcmp(existing, "abcdefghijklmnoprstuwxyz") != 0 ? readFromFile(existing): fresh_Matrix(covered, width, height,
     mrowka->position_x, mrowka->position_y, mrowka->direction);
-
+    if (strcmp(existing, "abcdefghijklmnoprstuwxyz") != 0) {
+        mrowka->direction = A->dir;
+        mrowka->position_x = A->x;
+        mrowka->position_y = A->y;
+    }
     if (A == NULL) {
       return -1;
     }
